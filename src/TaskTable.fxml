@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane maxHeight="1005.0" maxWidth="789.0" minHeight="988.0" minWidth="776.0" prefHeight="1005.0" prefWidth="785.0" stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="TaskTableController">
+   <children>
+      <TableView fx:id="taskTable" layoutY="104.0" prefHeight="888.0" prefWidth="779.0">
+        <columns>
+          <TableColumn fx:id="taskCell" prefWidth="244.0" text="Task" />
+          <TableColumn fx:id="predecessorCell" prefWidth="196.0" text="Predecessor Tasks" />
+            <TableColumn fx:id="durationCell" minWidth="0.0" prefWidth="192.0" text="Duration" />
+            <TableColumn fx:id="deleteButtonCell" minWidth="0.0" prefWidth="144.0" />
+        </columns>
+      </TableView>
+      <HBox alignment="CENTER_LEFT" layoutY="-1.0" prefHeight="107.0" prefWidth="776.0" spacing="30.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#addTaskAction" prefHeight="26.0" prefWidth="110.0" text="Add Task">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="showCriticalPathButton" mnemonicParsing="false" onAction="#showCriticalPathAction" prefHeight="45.0" prefWidth="182.0" text="Show Critical Path" />
+            <Button fx:id="showFreeMarginButton" mnemonicParsing="false" onAction="#showFreeMargin" prefHeight="45.0" prefWidth="215.0" text="Show Free Margin" />
+            <Button id="cancel_button" fx:id="clearTasksButton" mnemonicParsing="false" onAction="#clearTasks" prefHeight="26.0" prefWidth="153.0" text="Clear Tasks" />
+         </children>
+         <padding>
+            <Insets left="20.0" />
+         </padding>
+      </HBox>
+   </children>
+</AnchorPane>

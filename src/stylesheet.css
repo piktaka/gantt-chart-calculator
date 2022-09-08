@@ -1,0 +1,57 @@
+.title{
+    -fx-font-size: 40px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.input_label{
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+
+}
+
+.button{
+    -fx-background-color: #0049c4;
+    -fx-text-fill: white;
+    -fx-padding: 13px;
+    -fx-font-weight: bold;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 15px;
+    -fx-font-size: 17px;
+}
+
+.button:hover{
+    -fx-background-color: #4880da;
+    -fx-text-fill: white;
+
+}
+#cancel_button{
+
+    -fx-background-color: #d94652;
+    -fx-text-fill: white;
+}
+#cancel_button:hover{
+
+    -fx-background-color: #d56e76;
+    -fx-text-fill: white;
+}
+#title_container{
+    -fx-background-color: #031b3f;
+
+
+}
+#error_message{
+    -fx-text-fill: #f53c3c;
+    -fx-font-size: 25px;
+    -fx-font-weight: bold;
+}
+.table-view .column-header{
+
+    -fx-text-fill: white;
+    -fx-font-size: 19px;
+    -fx-font-weight: bold;
+}
+.table-view .table-cell{
+    -fx-font-size: 19px;
+    -fx-font-weight: bold;
+}
