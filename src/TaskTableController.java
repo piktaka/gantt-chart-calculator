@@ -9,19 +9,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 
 public class TaskTableController implements Initializable {
@@ -40,10 +36,9 @@ public class TaskTableController implements Initializable {
     @FXML
     private TableColumn<Task, Boolean> deleteButtonCell;
     @FXML
-    private Button showCriticalPathButton;
+    private Button showGraphDetailsButton;
 
-    @FXML
-    private Button showFreeMarginButton;
+
 
     @FXML
     private Button clearTasksButton;
@@ -66,25 +61,75 @@ public static SimpleBooleanProperty buttonToogle;
         addTaskDialogStage.showAndWait();
     }
 
-    public void showCriticalPathAction(ActionEvent actionEvent) {
+    void exportToLatexFile(String fileContent){
 
-        String formatCriticalPath="";
+        try {
+           // File myObj = new File("./graphTable.tex");
+            FileWriter myWriter = new FileWriter("graphTable.tex");
+            myWriter.write(fileContent);
+            myWriter.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+@FXML
+    public void ShowGraphDetailsAction(ActionEvent actionEvent) {
+String fileHeader="\\documentclass{article}\n\\begin{document}\n\\begin{center}\n\\begin{tabular}{|c| c| c| c| c| c|}\n";
+String fileContent="";
+String tableHeader=" \\hline\n Task & Predecessors & Duration & In Critical Path & Free Margin & Total Margin\\\\ [0.5ex]";
+String fileFooter="\\end{tabular}\n\\end{center}\n\\end{document}";
+StringBuilder fileBodyBuilder= new StringBuilder();
+ArrayList <Task>freeMarginTasks = graph.getFreeMargin()   ;
+    ArrayList <Task>criticalPathTasks =   graph.getCriticalPath();
+    String [] freeMargin_criticalPath = new String[2];
+for (Task task  :tasksList){
+    freeMargin_criticalPath[0] = criticalPathTasks.contains(task) ? "Yes" : "No";
+
+    freeMargin_criticalPath[1]= freeMarginTasks.contains(task) ? task.getFreeMargin().toString()  : "0";
+System.out.println("this is the task : "+task.getTaskName());
+    System.out.println("this is the task typing  : "+freeMargin_criticalPath[0] + " " +freeMargin_criticalPath[1]);
+    System.out.println("======================");
+
+
+    fileBodyBuilder.append("\\hline\n").append(task.getTaskName()).append(" ").append("&").append(" ").append(task.getPredecessorTasks()).append(" ").append("&").append(" ").append(task.getDuration()).append(" ").append("&").append(" ").append(freeMargin_criticalPath[0]).append(" ").append("&").append(" ").append(freeMargin_criticalPath[1]).append(" ").append("&").append(" ").append(freeMargin_criticalPath[1]).append(" \\\\").append("\n");
+
+}
+    fileBodyBuilder.append("\\hline\n");
+fileContent=fileHeader+tableHeader+fileBodyBuilder+fileFooter;
+System.out.println(fileContent);
+exportToLatexFile(fileContent);
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle("Saving file");
+    alert.setHeaderText(null);
+    alert.setContentText("Successfully wrote to the file.");
+
+    alert.showAndWait();
+    for (Task task : graph.getFreeMargin()){
+        System.out.println("this is a free margin task "+task.getTaskName());
+    }
+   System.out.println("this is e : "+freeMarginTasks.contains(graph.getAllTasks().get(1)));
+        return;
+      /*  String formatCriticalPath="";
       for ( Task criticalTask : graph.getCriticalPath()) {
           formatCriticalPath +=criticalTask.getTaskName()+" -> ";
       }
    formatCriticalPath=     formatCriticalPath.substring(0,formatCriticalPath.length()-3);
 
       System.out.println("this is the critical Path ::");
-        System.out.println(formatCriticalPath);
+        System.out.println(formatCriticalPath);*/
 
     }
 @FXML
     public void clearTasks(ActionEvent actionEvent) {
-        tasksList.clear();
-        graph.clearGraphsTask();
-    showFreeMarginButton.setDisable(true);
-    clearTasksButton.setDisable(true);
-    showCriticalPathButton.setDisable(true);
+       // tasksList.clear();
+    //    graph.clearGraphsTask();
+   // buttonToogle.set(true);
+    for(Task task : graph.getAllTasks()){
+
+        System.out.println("this is the task : "+task.getTaskName() +" and this is the isa predecessor "+task.isApredecessor());
+    }
     }
 @FXML
     public void showFreeMargin(ActionEvent actionEvent) {
@@ -141,6 +186,7 @@ public static SimpleBooleanProperty buttonToogle;
             }
         }
     }
+    /*
     public void fillList(){
         Task A = new Task("A",(Task) null,10);
 
@@ -164,13 +210,15 @@ public static SimpleBooleanProperty buttonToogle;
 
 
 
+     */
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         buttonToogle = new SimpleBooleanProperty(true);
-        showFreeMarginButton.setDisable(true);
+
         clearTasksButton.setDisable(true);
-        showCriticalPathButton.setDisable(true);
+        showGraphDetailsButton.setDisable(true);
 
 
         //fillList();
@@ -186,9 +234,9 @@ public static SimpleBooleanProperty buttonToogle;
         taskTable.setItems(tasksList);
 
 buttonToogle.addListener((observable, oldValue, newValue) -> {
-    showFreeMarginButton.setDisable(newValue);
+
     clearTasksButton.setDisable(newValue);
-    showCriticalPathButton.setDisable(newValue);
+    showGraphDetailsButton.setDisable(newValue);
 });
     }
 

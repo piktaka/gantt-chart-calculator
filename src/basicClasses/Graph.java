@@ -1,8 +1,8 @@
 package basicClasses;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 public class Graph {
     ArrayList <Task> allTasks;
@@ -11,6 +11,7 @@ public class Graph {
     ArrayList<Task>freeMargin;
     Task startedTask;
     Task endingTask ;
+    HashMap<Integer,Boolean> tasksIsApredecessors;
 
     public Graph(Task startedTask, Task endingTask) {
         this.startedTask = startedTask;
@@ -21,12 +22,14 @@ public class Graph {
         this.allTasks = new ArrayList<>(allTasks);
         this.criticalPath = new ArrayList<>();
         this.freeMargin = new ArrayList<>();
+        this.tasksIsApredecessors = new HashMap<>();
     }
 
     public Graph() {
         this.allTasks = new ArrayList<>();
         this. criticalPath = new ArrayList<>();
         this.freeMargin = new ArrayList<>();
+        this.tasksIsApredecessors = new HashMap<>();
     }
 
     public void setCalculatedEndingTask(){
@@ -53,6 +56,7 @@ endingTask.setTask(allTasks.get(taskIndex));
         this.endingTask=null;
         this.startedTask= null;
         this.freeMargin.clear();
+        this.tasksIsApredecessors.clear();
     }
   public  void addTask(Task task){
       //  if (allTasks == null)
@@ -115,40 +119,61 @@ break;
 return this.criticalPath;
     }
 
+    public ArrayList<Task> getAllTasks() {
+        return allTasks;
+    }
 
-   public ArrayList <Task > getFreeMargin(){
+    public void setAllTasks(ArrayList<Task> allTasks) {
+        this.allTasks = allTasks;
+    }
 
+
+    void checkIfItIsApredecessor(){
+
+    }
+
+    public ArrayList <Task > getFreeMargin(){
 Task copyTask ;
         for (Task task : this.allTasks){
-            System.out.println("for task : "+task.getTaskName());
+
+            if(!task.isApredecessor()){
+                System.out.println("this task is not a predecessor : "+task.getTaskName());
+                task.setFreeMargin(this.endingTask.getEndDate()- task.getEndDate());
+                this.freeMargin.add(task);
+            }
+
+       //     System.out.println("for task : "+task.getTaskName());
             System.out.println("-------------");
             System.out.println("");
-            System.out.println("task start date : "+task.getStartDate());
+     //       System.out.println("task start date : "+task.getStartDate());
 
             System.out.println("");
 
             for (Task predecessorTask : task.getPredecessorArray()){
     copyTask=predecessorTask;
     copyTask.setFreeMargin( task.getStartDate()-predecessorTask.getEndDate());
-System.out.println("this is copy task : "+copyTask.getTaskName()+" and the end date "+copyTask.getEndDate());
-                System.out.println("-------------");
-                System.out.println("");
+//System.out.println("this is copy task : "+copyTask.getTaskName()+" and the end date "+copyTask.getEndDate());
+               System.out.println("-------------");
+              System.out.println("");
 
-    if(copyTask.getEndDate() < task.getStartDate()) {
+    if(!this.criticalPath.contains(copyTask) && copyTask.getEndDate() < task.getStartDate() ) {
 
     this.freeMargin.add(copyTask);
-        System.out.println("new free margin task "+copyTask.getTaskName());
-        System.out.println("-------------");
-        System.out.println("");
-        System.out.println("");
+       System.out.println("new free margin task "+copyTask.getTaskName());
+    //    System.out.println("-------------");
+    //    System.out.println("");
+  //      System.out.println("");
 
 }
-else {
+
+
+
+else  {
     ;
         System.out.println("removed  free margin task "+copyTask.getTaskName()+" is removed : "+this.freeMargin.remove(copyTask));
-        System.out.println("-------------");
-        System.out.println("");
-        System.out.println("");
+    //    System.out.println("-------------");
+    //    System.out.println("");
+    //    System.out.println("");
 
 
     }
@@ -159,8 +184,11 @@ else {
 
         }
 
-       System.out.println("this is freeMarginTasks "+this.freeMargin);
-       System.out.println("this is the free margin duration  "+this.freeMargin.get(0).getFreeMargin());
+     //  System.out.println("this is freeMarginTasks "+this.freeMargin);
+       //System.out.println("this is the free margin duration  "+this.freeMargin.get(0).getFreeMargin());
+
+
+
 
         return  this.freeMargin;
     }

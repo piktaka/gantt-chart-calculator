@@ -9,6 +9,21 @@ public class Task {
    ArrayList <Task> predecessorTasks;
     Integer duration, startDate,endDate,freeMargin;
 
+    Boolean aPredecessor =false;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return taskId.equals(task.taskId) && taskName.equals(task.taskName);
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
+
     Task predecessorTask;
 
     public Integer getEndDate() {
@@ -129,15 +144,23 @@ if (this.startDate < predecessorTask.getEndDate())
         this.predecessorTask = predecessorTask;
     }
 
+    public Boolean isApredecessor() {
+        return aPredecessor;
+    }
+
+    public void setAPredecessor(Boolean aPredecessor) {
+        this.aPredecessor = aPredecessor;
+    }
+
     public Task(String taskName, ArrayList<Task> predecessorTasks, Integer duration) {
         this.taskName = taskName;
         this.predecessorTasks = new ArrayList<>();
-        if (predecessorTasks != null) {
+      if (predecessorTasks != null) {
 
             this.predecessorTasks.addAll(predecessorTasks);
 
-        }
-        else System.out.println("we are here "+taskName);
+      }
+/*        else System.out.println("we are here "+taskName);*/
         this.duration = duration;
         // here we are searching for the task that has the big EndDate fro the calculating
         // the end date of this task
@@ -146,6 +169,7 @@ if (this.startDate < predecessorTask.getEndDate())
 
             if (task.getEndDate() > bigDuration)
                 bigDuration=task.getEndDate();
+            task.setAPredecessor(true);
 
         }
         // it will start from the ending of the predecessor task immediately
@@ -173,6 +197,9 @@ if (this.startDate < predecessorTask.getEndDate())
             if (task.getEndDate() > bigDuration) {
                 bigDuration = task.getEndDate();
                 this.predecessorTask.setTask(task);
+                if(task.isApredecessor())
+                    continue;
+                 task.setAPredecessor(true);
             }
 
         }

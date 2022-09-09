@@ -24,8 +24,7 @@
                   <Insets />
                </HBox.margin>
             </Button>
-            <Button fx:id="showCriticalPathButton" mnemonicParsing="false" onAction="#showCriticalPathAction" prefHeight="45.0" prefWidth="182.0" text="Show Critical Path" />
-            <Button fx:id="showFreeMarginButton" mnemonicParsing="false" onAction="#showFreeMargin" prefHeight="45.0" prefWidth="215.0" text="Show Free Margin" />
+            <Button fx:id="showGraphDetailsButton" mnemonicParsing="false" onAction="#ShowGraphDetailsAction" prefHeight="46.0" prefWidth="219.0" text="Show Graph Details" />
             <Button id="cancel_button" fx:id="clearTasksButton" mnemonicParsing="false" onAction="#clearTasks" prefHeight="26.0" prefWidth="153.0" text="Clear Tasks" />
          </children>
          <padding>

@@ -48,7 +48,7 @@ TaskTableController.addTaskDialogStage.hide();
         System.out.println("branch checked [3] "+(taskDurationTextField.getText().equals("")));
         System.out.println("branch checked [4] "+( checkIfNameDuplicated(taskNameTextField.getText())));
 
-        if(taskNameTextField.getText().equals("") &&taskDurationTextField.getText().equals("") && !checkIfNameDuplicated(taskNameTextField.getText())) {
+        if(taskNameTextField.getText().equals("") || taskDurationTextField.getText().equals("") || checkIfNameDuplicated(taskNameTextField.getText())) {
             errorMessageLabel.setText("Check your information !");
             return;
         }
@@ -86,7 +86,7 @@ TaskTableController.graph.addTask(newTask);
         */
 //System.out.println("another init ");
 
-predecessorComboBox.getItems().addAll(TaskTableController.tasksList);
+predecessorComboBox.getItems().addAll(TaskTableController.graph.getAllTasks());
 //System.out.println("combo box list "+predecessorComboBox.getItems());
         taskDurationTextField.textProperty().addListener(new ChangeListener<String>() {
             @Override
