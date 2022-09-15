@@ -4,28 +4,21 @@
 \begin{tabular}{|c| c| c| c| c| c|}
  \hline
  Task & Predecessors & Duration & In Critical Path & Free Margin & Total Margin\\ [0.5ex]\hline
-c & None & 5 & No & 4 & 4 \\
+a & None & 2 & No & 0 & 0 \\
 \hline
-e & None & 9 & Yes & 0 & 0 \\
+b & None & 4 & Yes & 0 & 0 \\
 \hline
-k & c, e & 2 & Yes & 0 & 0 \\
+c & a & 1 & No & 4 & 4 \\
 \hline
-j & e & 11 & No & 0 & 0 \\
+d & b & 3 & Yes & 0 & 0 \\
 \hline
-h & e, k & 5 & No & 14 & 14 \\
-\hline
-g & e, k & 12 & Yes & 0 & 0 \\
-\hline
-b & e & 6 & No & 0 & 0 \\
-\hline
-a & j & 3 & No & 0 & 0 \\
-\hline
-d & b & 2 & No & 3 & 3 \\
-\hline
-f & j, d & 3 & No & 7 & 7 \\
-\hline
-i & g, a & 7 & Yes & 0 & 0 \\
+e & c, d & 2 & Yes & 0 & 0 \\
 \hline
 \end{tabular}
-\end{center}
+\begin{center}
+Critical path : \\
+Task (b)  \Rightarrow  Task (d)  \Rightarrow  Task (e)\\
+Other tasks : \\
+Task (a)  \Rightarrow  Task (c)\\
+\end{center}\end{center}
 \end{document}

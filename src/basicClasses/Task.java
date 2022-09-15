@@ -8,7 +8,7 @@ public class Task {
     String taskName;
    ArrayList <Task> predecessorTasks;
     Integer duration, startDate,endDate,freeMargin;
-
+    Task successorTask;
     Boolean aPredecessor =false;
 
     @Override
@@ -85,40 +85,19 @@ public class Task {
         return taskNames.substring(0,taskNames.length()-2);
     }
 
+    public Task getSuccessorTask() {
+        return successorTask;
+    }
+
+    public void setSuccessorTask(Task successorTask) {
+        this.successorTask = successorTask;
+    }
+
     public void setPredecessorTasks(ArrayList<Task> predecessorTasks) {
         this.predecessorTasks = new ArrayList<>(predecessorTasks);
 
     }
-    public void addTask(Task predecessorTask) {
-      /*  Boolean broken=false;
-        for (Task task :this.predecessorTasks ){
 
-            if (predecessorTask.getEndDate() < task.getEndDate()) {
-             broken=true;
-                break;
-            }*/
-
-
-     //   }
-// here we are comparing the task that we've added to the predecessor
-        // inorder to check if it has the big endDate
-
-
-        //    System.out.println("we are at "+taskName+" and itis the case");
-
-        if(predecessorTasks.isEmpty()){
-            System.out.println("we are at "+taskName+" and itis the case");
-            this.endDate=duration + predecessorTask.getEndDate();
-            this.startDate= predecessorTask.getEndDate();
-            return;
-        }
-
-if (this.startDate < predecessorTask.getEndDate())
-    this.endDate=duration + predecessorTask.getEndDate();
-
-        this.predecessorTasks.add(predecessorTask);
-
-    }
 
     public Integer getDuration() {
         return duration;
@@ -162,15 +141,23 @@ if (this.startDate < predecessorTask.getEndDate())
       }
 /*        else System.out.println("we are here "+taskName);*/
         this.duration = duration;
-        // here we are searching for the task that has the big EndDate fro the calculating
+        // here we are searching for the task that has the big EndDate for the calculating on the predecessors task
         // the end date of this task
         Integer bigDuration=0;
+        Integer index=0;
         for (Task task :this.predecessorTasks ){
 
-            if (task.getEndDate() > bigDuration)
-                bigDuration=task.getEndDate();
-            task.setAPredecessor(true);
+            if (task.getEndDate() > bigDuration) {
+                bigDuration = task.getEndDate();
+           index=task.getTaskId();
 
+            }
+
+        }
+
+        for (Task task :this.predecessorTasks ){
+
+            System.out.println("this is the task "+task.getTaskName() + " and this is a predecessor : "+task.isApredecessor() );
         }
         // it will start from the ending of the predecessor task immediately
         this.startDate=bigDuration;
@@ -192,20 +179,35 @@ if (this.startDate < predecessorTask.getEndDate())
         // here we are searching for the task that has the big EndDate fro the calculating
         // the end date of this task
         Integer bigDuration=0;
+        Task predecessorTask=null;
         for (Task task :this.predecessorTasks ){
 
             if (task.getEndDate() > bigDuration) {
                 bigDuration = task.getEndDate();
-                this.predecessorTask.setTask(task);
-                if(task.isApredecessor())
-                    continue;
-                 task.setAPredecessor(true);
+             predecessorTask=task;
+
             }
 
+
         }
+
+        if(!this.predecessorTasks.isEmpty()) {
+            System.out.println("this is the problem   ++++______ : "+this.predecessorTasks + "the index  ##  " );
+            predecessorTask.setSuccessorTask(this);
+            predecessorTask.setAPredecessor(true);
+            this.predecessorTask.setTask(predecessorTask);
+
+        }
+
         // it will start from the ending of the predecessor task immediately
         this.startDate=bigDuration;
         this.endDate = bigDuration+this.duration;
+
+
+        for (Task task :this.predecessorTasks ){
+
+            System.out.println("this is the task "+task.getTaskName() + " and this is a predecessor : "+task.isApredecessor() );
+        }
 //System.out.println("final date of "+this.taskName +" is :  "+this.endDate );
     }
     public Task(String taskName, Task predecessorTask, Integer duration) {
@@ -247,6 +249,10 @@ this.startDate=predecessorTask.getEndDate();
         this.predecessorTask=task.getPredecessorTask();
         else
             this.predecessorTask=null;
+        if(task.getSuccessorTask()!=null)
+            this.successorTask=task.getSuccessorTask();
+        else
+            this.successorTask=null;
 
     }
 ArrayList<Task> getPredecessorArray(){
@@ -262,11 +268,13 @@ void setTask(Task task){
     this.endDate=task.getEndDate();
     this.taskId=task.getTaskId();
     this.startDate = task.getStartDate();
-
+    this.predecessorTask=task.getPredecessorTask();
+    this.successorTask=task.getSuccessorTask();
 
 
 
 }
+
     @Override
     public String toString() {
         return "Task{" +

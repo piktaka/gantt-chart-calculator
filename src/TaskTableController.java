@@ -18,6 +18,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 
 public class TaskTableController implements Initializable {
@@ -79,10 +80,12 @@ public static SimpleBooleanProperty buttonToogle;
 String fileHeader="\\documentclass{article}\n\\begin{document}\n\\begin{center}\n\\begin{tabular}{|c| c| c| c| c| c|}\n";
 String fileContent="";
 String tableHeader=" \\hline\n Task & Predecessors & Duration & In Critical Path & Free Margin & Total Margin\\\\ [0.5ex]";
-String fileFooter="\\end{tabular}\n\\end{center}\n\\end{document}";
+String fileFooter="\\end{center}\n\\end{document}";
 StringBuilder fileBodyBuilder= new StringBuilder();
+    StringBuilder graphDetails= new StringBuilder();
 ArrayList <Task>freeMarginTasks = graph.getFreeMargin()   ;
     ArrayList <Task>criticalPathTasks =   graph.getCriticalPath();
+    ArrayList<Task> allTasksArrayCopy = new ArrayList<>(graph.getAllTasks());
     String [] freeMargin_criticalPath = new String[2];
 for (Task task  :tasksList){
     freeMargin_criticalPath[0] = criticalPathTasks.contains(task) ? "Yes" : "No";
@@ -97,7 +100,36 @@ System.out.println("this is the task : "+task.getTaskName());
 
 }
     fileBodyBuilder.append("\\hline\n");
-fileContent=fileHeader+tableHeader+fileBodyBuilder+fileFooter;
+fileBodyBuilder.append("\\end{tabular}\n");
+    graphDetails.append("\\begin{center}\n").append("Critical path : \\\\\n");
+    allTasksArrayCopy.removeAll(criticalPathTasks);
+for (Task criticalTask :criticalPathTasks ){
+
+graphDetails.append("Task (").append(criticalTask.getTaskName()).append(")").append("  \\Rightarrow  ");
+}
+  graphDetails.delete(graphDetails.lastIndexOf("  \\Rightarrow  "),graphDetails.length());
+graphDetails.append("\\\\\n");
+graphDetails.append("Other tasks : \\\\\n");
+
+for (Task otherTask : tasksList){
+
+    Task anotherTask = otherTask;
+    if(!allTasksArrayCopy.contains( otherTask))
+        continue;
+    while(true) {
+
+        graphDetails.append("Task (").append(anotherTask.getTaskName()).append(")").append("  \\Rightarrow  ");
+        anotherTask = anotherTask.getSuccessorTask();
+        if (anotherTask==null)
+            break;
+        allTasksArrayCopy.remove(anotherTask);
+    }
+    graphDetails.delete(graphDetails.lastIndexOf("  \\Rightarrow  "),graphDetails.length());
+    graphDetails.append("\\\\\n");
+    allTasksArrayCopy.remove(otherTask);
+}
+graphDetails.append("\\end{center}");
+fileContent=fileHeader+tableHeader+fileBodyBuilder+graphDetails+fileFooter;
 System.out.println(fileContent);
 exportToLatexFile(fileContent);
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -123,13 +155,10 @@ exportToLatexFile(fileContent);
     }
 @FXML
     public void clearTasks(ActionEvent actionEvent) {
-       // tasksList.clear();
-    //    graph.clearGraphsTask();
-   // buttonToogle.set(true);
-    for(Task task : graph.getAllTasks()){
+        tasksList.clear();
+        graph.clearGraphsTask();
+    buttonToogle.set(true);
 
-        System.out.println("this is the task : "+task.getTaskName() +" and this is the isa predecessor "+task.isApredecessor());
-    }
     }
 @FXML
     public void showFreeMargin(ActionEvent actionEvent) {
